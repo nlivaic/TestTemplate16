@@ -38,7 +38,7 @@ namespace TestTemplate16.Api;
 public class Startup
 {
     private readonly IConfiguration _configuration;
-    private readonly IHostEnvironment _hostEnvironment;
+    private readonly IHostEnvironment _hostEnvironment; 
 
     public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment)
     {
