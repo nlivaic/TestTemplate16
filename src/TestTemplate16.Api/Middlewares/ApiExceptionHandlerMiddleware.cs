@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TestTemplate16.Api.Helpers;
 using TestTemplate16.Common.Exceptions;
@@ -14,8 +15,6 @@ namespace TestTemplate16.Api.Middlewares;
 
 /// <summary>
 /// Handles exceptions by logging the exception object.
-/// Buffers incoming Http requests so body can be logged
-/// in case of a 500 error.
 /// </summary>
 public class ApiExceptionHandlerMiddleware
 {
@@ -48,7 +47,7 @@ public class ApiExceptionHandlerMiddleware
 
     private static async Task HandleBusinessException(HttpContext context, Exception ex)
     {
-        var validationProblemDetails = ValidationProblemDetailsFactory
+        var validationProblemDetails = ProblemDetailsFactory
                 .Create(context, new Dictionary<string, string[]>
                 {
                     { string.Empty, new string[] { ex.Message } }
@@ -63,10 +62,20 @@ public class ApiExceptionHandlerMiddleware
 
     private static async Task HandleEntityNotFoundException(HttpContext context, Exception ex)
     {
-        var problemDetails = ValidationProblemDetailsFactory.CreateNotFoundProblemDetails(context, ex.Message);
+        var problemDetails = ProblemDetailsFactory.CreateNotFoundProblemDetails(context, ex.Message);
         var result = JsonSerializer.Serialize(problemDetails);
         context.Response.ContentType = "application/problem+json";
         context.Response.StatusCode = StatusCodes.Status404NotFound;
+        await context.Response.WriteAsync(result);
+    }
+
+    private static async Task HandleDbUpdateConcurrencyExceptionException(HttpContext context, Exception ex)
+    {
+        var validationProblemDetails = ProblemDetailsFactory
+                .CreateDbConcurrencyUpdateProblemDetails(context);
+        var result = JsonSerializer.Serialize(validationProblemDetails);
+        context.Response.ContentType = "application/problem+json";
+        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
         await context.Response.WriteAsync(result);
     }
 
@@ -80,6 +89,10 @@ public class ApiExceptionHandlerMiddleware
         {
             await HandleEntityNotFoundException(context, ex);
         }
+        else if (ex is DbUpdateConcurrencyException)
+        {
+            await HandleDbUpdateConcurrencyExceptionException(context, ex);
+        }
         else
         {
             await HandleException(context, ex);
@@ -89,7 +102,7 @@ public class ApiExceptionHandlerMiddleware
     private async Task HandleException(HttpContext context, Exception ex)
     {
         var innermostException = GetInnermostException(ex);
-        var problemDetail = ValidationProblemDetailsFactory.CreateInternalServerErrorProblemDetails(context);
+        var problemDetail = ProblemDetailsFactory.CreateInternalServerErrorProblemDetails(context);
 
         _options.ApiErrorHandler?.Invoke(context, ex, problemDetail);
         var logLevel = _options.LogLevelHandler?.Invoke(context, ex) ?? LogLevel.Error;

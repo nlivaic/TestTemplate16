@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TestTemplate16.Api.Helpers;
 
-public class ValidationProblemDetailsFactory
+public class ProblemDetailsFactory
 {
     public static ValidationProblemDetails Create(ActionContext actionContext)
     {
@@ -27,6 +27,20 @@ public class ValidationProblemDetailsFactory
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             Title = "One or more validation errors occurred.",
             Detail = "See the errors property for more details.",
+            Instance = httpContext.Request.Path,
+            Status = StatusCodes.Status422UnprocessableEntity
+        };
+        problemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier);
+        return problemDetails;
+    }
+
+    public static ProblemDetails CreateDbConcurrencyUpdateProblemDetails(HttpContext httpContext)
+    {
+        var problemDetails = new ProblemDetails()
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            Title = "Concurrent database update error occurred.",
+            Detail = "Could not perform state change. Target entity already updated in the meantime. Please refresh and try again.",
             Instance = httpContext.Request.Path,
             Status = StatusCodes.Status422UnprocessableEntity
         };
