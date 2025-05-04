@@ -16,7 +16,7 @@ public class ProblemDetailsFactory
             Detail = "See the errors property for more details.",
             Instance = actionContext.HttpContext.Request.Path
         };
-        problemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? actionContext.HttpContext.TraceIdentifier);
+        problemDetails.Extensions.Add("traceId", Activity.Current?.Id.ToString() ?? actionContext.HttpContext.TraceIdentifier);
         return problemDetails;
     }
 
@@ -30,7 +30,7 @@ public class ProblemDetailsFactory
             Instance = httpContext.Request.Path,
             Status = StatusCodes.Status422UnprocessableEntity
         };
-        problemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier);
+        problemDetails.Extensions.Add("traceId", Activity.Current?.Id.ToString() ?? httpContext.TraceIdentifier);
         return problemDetails;
     }
 
@@ -44,7 +44,7 @@ public class ProblemDetailsFactory
             Instance = httpContext.Request.Path,
             Status = StatusCodes.Status422UnprocessableEntity
         };
-        problemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier);
+        problemDetails.Extensions.Add("traceId", Activity.Current?.Id.ToString() ?? httpContext.TraceIdentifier);
         return problemDetails;
     }
 
@@ -57,7 +57,7 @@ public class ProblemDetailsFactory
             Detail = message,
             Status = StatusCodes.Status404NotFound
         };
-        problemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier);
+        problemDetails.Extensions.Add("traceId", Activity.Current?.Id.ToString() ?? httpContext.TraceIdentifier);
         return problemDetails;
     }
 
@@ -70,7 +70,7 @@ public class ProblemDetailsFactory
             Detail = "Some kind of error occurred in the API. Please use provided Id and get in touch with support.",
             Status = StatusCodes.Status500InternalServerError
         };
-        problemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
+        problemDetails.Extensions.Add("traceId", Activity.Current?.Id.ToString() ?? context.TraceIdentifier);
         return problemDetails;
     }
 }

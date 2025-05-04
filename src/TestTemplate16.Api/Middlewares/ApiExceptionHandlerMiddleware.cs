@@ -54,9 +54,7 @@ public class ApiExceptionHandlerMiddleware
                 });
         var result = JsonSerializer.Serialize(validationProblemDetails);
         context.Response.ContentType = "application/problem+json";
-        context.Response.StatusCode = context.Request.Method == HttpMethods.Delete
-            ? StatusCodes.Status409Conflict
-            : StatusCodes.Status422UnprocessableEntity;
+        context.Response.StatusCode = validationProblemDetails.Status!.Value;
         await context.Response.WriteAsync(result);
     }
 
@@ -65,17 +63,17 @@ public class ApiExceptionHandlerMiddleware
         var problemDetails = ProblemDetailsFactory.CreateNotFoundProblemDetails(context, ex.Message);
         var result = JsonSerializer.Serialize(problemDetails);
         context.Response.ContentType = "application/problem+json";
-        context.Response.StatusCode = StatusCodes.Status404NotFound;
+        context.Response.StatusCode = problemDetails.Status!.Value;
         await context.Response.WriteAsync(result);
     }
 
     private static async Task HandleDbUpdateConcurrencyExceptionException(HttpContext context, Exception ex)
     {
-        var validationProblemDetails = ProblemDetailsFactory
+        var problemDetails = ProblemDetailsFactory
                 .CreateDbConcurrencyUpdateProblemDetails(context);
-        var result = JsonSerializer.Serialize(validationProblemDetails);
+        var result = JsonSerializer.Serialize(problemDetails);
         context.Response.ContentType = "application/problem+json";
-        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+        context.Response.StatusCode = problemDetails.Status!.Value;
         await context.Response.WriteAsync(result);
     }
 
