@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace TestTemplate16.Api.Helpers;
 
-public static class WebApplicationExtensions
+public static class EndpointRouteBuilderExtensions
 {
     public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder endpointRouteBuilder, Assembly assembly = null)
     {

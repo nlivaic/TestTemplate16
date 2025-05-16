@@ -17,10 +17,10 @@ public class PostFooEndpoint
     public void Register(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder
-            .MapGroup("Foos")
+            .MapGroup(Group.Foos)
             .MapPost(string.Empty, ExecuteAsync)
             .WithName("PostFoo")
-            .WithTags("Foos")
+            .WithTags(Tags.Foos)
             .Produces<FooGetModel>(StatusCodes.Status201Created)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<object>(StatusCodes.Status406NotAcceptable)

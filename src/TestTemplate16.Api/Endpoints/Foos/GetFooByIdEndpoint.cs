@@ -17,10 +17,10 @@ public class GetFooByIdEndpoint
     public void Register(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder
-            .MapGroup("Foos")
+            .MapGroup(Group.Foos)
             .MapGet("{id}", ExecuteAsync)
             .WithName("GetFoo")
-            .WithTags("Foos")
+            .WithTags(Tags.Foos)
             .Produces<IEnumerable<FooGetModel>>(StatusCodes.Status200OK)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)

@@ -16,10 +16,10 @@ public class GetFoosEndpoint : IEndpoint
     public void Register(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder
-            .MapGroup("Foos")
+            .MapGroup(Group.Foos)
             .MapGet("/", Execute)
             .WithName("GetFoos")
-            .WithTags("Foos")
+            .WithTags(Tags.Foos)
             .Produces<IEnumerable<FooGetModel>>(StatusCodes.Status200OK)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<object>(StatusCodes.Status406NotAcceptable)

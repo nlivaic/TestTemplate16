@@ -16,10 +16,10 @@ public class PutFooEndpoint
     public void Register(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder
-            .MapGroup("Foos")
+            .MapGroup(Group.Foos)
             .MapPut("{id}", ExecuteAsync)
             .WithName("PutFoo")
-            .WithTags("Foos")
+            .WithTags(Tags.Foos)
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)

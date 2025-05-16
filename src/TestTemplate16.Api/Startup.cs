@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using FluentValidation;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -144,6 +147,7 @@ public class Startup
         services.AddSingleton<ICache, Cache>();
         services.AddMemoryCache();
 
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(setupAction =>
         {
             setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -281,8 +285,6 @@ public class Startup
         app.UseCors("TestTemplate16Client");
         app.UseHttpsRedirection();
 
-        // Commented out as we are running front end as a standalone app.
-        // app.UseSpaStaticFiles();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
@@ -292,8 +294,8 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
+        //app.UseAuthentication();
+        //app.UseAuthorization();
 
         app.UseUserLoggingMiddleware();
 
@@ -325,7 +327,9 @@ public class Startup
             {
                 ResponseWriter = HealthCheckResponses.WriteJsonResponse
             });
-            endpoints.MapEndpoints();
+            endpoints
+                .MapGroup(Endpoints.Group.Api) // Common prefix for all endpoints.
+                .MapEndpoints();
         });
 
         // Commented out as we are running front end as a standalone app.

@@ -16,16 +16,16 @@ public class DeleteFooEndpoint : IEndpoint
     public void Register(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder
-            .MapGroup("Foos")
+            .MapGroup(Group.Foos)
             .MapDelete("{id}", ExecuteAsync)
             .WithName("DeleteFoo")
-            .WithTags("Foos")
+            .WithTags(Tags.Foos)
+            .WithOpenApi()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
             .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .WithOpenApi();
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     /// <summary>
