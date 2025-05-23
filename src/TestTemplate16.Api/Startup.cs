@@ -13,13 +13,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -148,6 +148,7 @@ public class Startup
         services.AddSingleton<ICache, Cache>();
         services.AddMemoryCache();
 
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(setupAction =>
         {
             setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -155,7 +156,7 @@ public class Startup
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Name = "Authorization",
+                Name = HeaderNames.Authorization,
                 Description = "Bearer Authentication with JWT Token",
                 Type = SecuritySchemeType.Http
             });
@@ -285,8 +286,6 @@ public class Startup
         app.UseCors("TestTemplate16Client");
         app.UseHttpsRedirection();
 
-        // Commented out as we are running front end as a standalone app.
-        // app.UseSpaStaticFiles();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
@@ -329,7 +328,9 @@ public class Startup
             {
                 ResponseWriter = HealthCheckResponses.WriteJsonResponse
             });
-            endpoints.MapControllers();
+            endpoints
+                .MapGroup(Endpoints.Group.Api) // Common prefix for all endpoints.
+                .MapEndpoints();
         });
 
         // Commented out as we are running front end as a standalone app.
