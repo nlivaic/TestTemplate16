@@ -20,7 +20,7 @@ public class GetFoosEndpoint : IEndpoint
             .MapGet("/", Execute)
             .WithName("GetFoos")
             .WithTags(Tags.Foos)
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .Produces<IEnumerable<FooGetModel>>(StatusCodes.Status200OK)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<object>(StatusCodes.Status406NotAcceptable)

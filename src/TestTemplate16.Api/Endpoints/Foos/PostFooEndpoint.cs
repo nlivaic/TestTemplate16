@@ -21,7 +21,7 @@ public class PostFooEndpoint
             .MapPost(string.Empty, ExecuteAsync)
             .WithName("PostFoo")
             .WithTags(Tags.Foos)
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .Produces<FooGetModel>(StatusCodes.Status201Created)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<object>(StatusCodes.Status406NotAcceptable)

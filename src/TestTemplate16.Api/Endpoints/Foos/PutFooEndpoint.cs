@@ -20,7 +20,7 @@ public class PutFooEndpoint
             .MapPut("{id}", ExecuteAsync)
             .WithName("PutFoo")
             .WithTags(Tags.Foos)
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
