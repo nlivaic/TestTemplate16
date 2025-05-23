@@ -20,6 +20,7 @@ public class PutFooEndpoint
             .MapPut("{id}", ExecuteAsync)
             .WithName("PutFoo")
             .WithTags(Tags.Foos)
+            //.RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
@@ -35,7 +36,7 @@ public class PutFooEndpoint
     public async Task<IResult> ExecuteAsync(
         ISender sender,
         IMapper mapper,
-        [AsParameters] UpdateFooCommand updateFooCommand)
+        [FromBody] UpdateFooCommand updateFooCommand)
     {
         // call handler.
         // map return value

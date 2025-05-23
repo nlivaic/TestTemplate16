@@ -21,6 +21,7 @@ public class DeleteFooEndpoint : IEndpoint
             .WithName("DeleteFoo")
             .WithTags(Tags.Foos)
             .WithOpenApi()
+            //.RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)

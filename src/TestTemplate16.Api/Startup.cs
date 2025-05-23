@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -155,7 +156,7 @@ public class Startup
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Name = "Authorization",
+                Name = HeaderNames.Authorization,
                 Description = "Bearer Authentication with JWT Token",
                 Type = SecuritySchemeType.Http
             });
@@ -294,8 +295,8 @@ public class Startup
 
         app.UseRouting();
 
-        //app.UseAuthentication();
-        //app.UseAuthorization();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseUserLoggingMiddleware();
 
