@@ -21,7 +21,7 @@ public class GetFooByIdEndpoint
             .MapGet("{id}", ExecuteAsync)
             .WithName("GetFoo")
             .WithTags(Tags.Foos)
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .Produces<IEnumerable<FooGetModel>>(StatusCodes.Status200OK)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
